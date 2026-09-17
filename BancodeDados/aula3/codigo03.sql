@@ -1,4 +1,4 @@
--- Active: 1788386532490@@127.0.0.1@5432@bd_vendas@public
+-- Active: 1788479825768@@127.0.0.1@5432@bd_vendas@public
 
 DROP TABLE IF EXISTS vendas_itens;
 
@@ -297,3 +297,52 @@ ORDER BY
     --observacao DESC;
     --observacao ASC;
     observacao ASC NULLS FIRST
+
+SELECT
+    venda_id, produto_id, valor_unitario
+FROM
+    vendas_itens
+ORDER BY
+    valor_unitario DESC,
+    venda_id ASC,
+    produto_id ASC
+LIMIT 5 OFFSET 0;
+
+SELECT
+    COUNT(*) AS itens,
+    COUNT(observacao) AS itens_com_observacao,
+    COUNT(DISTINCT venda_id) AS vendas,
+    COUNT(DISTINCT produto_id) AS produtos,
+    SUM(valor_unitario) AS soma,
+    ROUND(AVG(valor_unitario), 2) AS media,
+    MIN(valor_unitario) AS menor,
+    MAX(valor_unitario) AS maior
+FROM
+    vendas_itens
+
+-- valor_total de cada venda
+
+SELECT
+    venda_id,
+    SUM(valor_unitario) AS valor_total,
+    data_venda
+FROM
+    vendas_itens
+GROUP BY
+    venda_id,
+    data_venda
+ORDER BY
+    valor_total DESC
+
+-- O valor da venda total de cada produto
+
+SELECT
+    produto_id,
+    SUM(valor_unitario) AS valor_total,
+    COUNT(*) AS vezes_vendido
+FROM
+    vendas_itens
+GROUP BY
+    produto_id
+ORDER BY
+    produto_id
