@@ -1,4 +1,4 @@
--- Active: 1789675894857@@127.0.0.1@5432@bd_hortifruti@public
+-- Active: 1789687713744@@127.0.0.1@5432@bd_hortifruti@public
 
 -- CREATE DATABASE bd_hortifruti;
 
@@ -13,7 +13,7 @@ CREATE TABLE itens_venda (
     categoria TEXT NOT NULL,
     unidade TEXT NOT NULL,
     quantidade NUMERIC(10, 3) NOT NULL, --A quantidade foi definida como Numeric por conter valores que podem ser reais/decimais. Ex: Um cliente pode comprar 0.554 kg de maçã
-    valor_unitario NUMERIC(10, 2) NOT NULL --O valor unitário foi definido como Numeric em vista que um produto pode ter um valor_uni decimal, como exemplo: r$89.99.
+    valor_unitario NUMERIC(10, 2) NOT NULL --O valor unitário foi definido como numeric em vista que um produto pode ter um valor_uni decimal, como exemplo: r$89.99.
 );
 
 INSERT INTO itens_venda
@@ -237,3 +237,38 @@ HAVING
 ORDER BY
     venda_id;
 
+-- Questão 1
+/*
+As colunas venda_id, data_venda e bairro_entrega repetem
+em várias linhas um fato que pertence apenas à venda,
+pois cada venda pode ter vários itens. Já as colunas produto_id, produto_nome,
+categoria e unidade repetem em várias linhas um fato que pertence apenas ao produto,
+pois cada produto pode ser vendido em diferentes vendas. O valor_unitario também se repete,
+mas ele não pertence exclusivamente à venda ou ao produto, pois o preço de um produto pode
+variar entre diferentes vendas. Se o nome de um produto fosse alterado em somente algumas
+das linhas em que aparece, isso poderia causar inconsistências nas consultas 1 e 8,
+resultando em múltiplas entradas para o mesmo produto com nomes diferentes, afetando
+a agregaçãoe a contagem correta dos produtos vendidos.
+*/
+
+-- Questão 2
+/*
+Resposta: 
+1. Uma regra enunciada que não é declarada é a de que cada venda deve ter pelo menos um item.
+Um INSERT que viola essa regra seria:
+   INSERT INTO itens_venda (venda_id, produto_id, quantidade, valor_unitario) VALUES (1, 1, 0, 10.00);
+2. Outra regra enunciada que não é declarada é a de que o valor unitário de um produto não pode ser negativo.
+Um INSERT que viola essa regra seria:
+   INSERT INTO itens_venda (venda_id, produto_id, quantidade, valor_unitario) VALUES (1, 1, 5, -10.00);
+*/
+
+-- Questão 3
+/*
+A média ponderada do morango é menor que a média simples porque o morango foi
+vendido em diferentes vendas com preços unitários variados, e as vendas com
+menor preço tiveram maior quantidade vendida, influenciando a média
+ponderada para baixo. Já o abacaxi teve vendas com preços unitários mais
+altos e quantidades menores, o que elevou a média ponderada acima da média simples.
+No caso do cheiro-verde, todas as vendas ocorreram com o mesmo preço unitário,
+resultando em médias simples e ponderadas iguais.
+*/
